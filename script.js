@@ -184,10 +184,9 @@ document.addEventListener('keydown', (e) => {
 const pdfBtn = document.getElementById('pdf-btn');
 
 pdfBtn.addEventListener('click', () => {
-    const content = outputText.innerText;
-    
     // Check if there's actual content
-    if (!content || content.includes('Your bionic reading text will appear here')) {
+    const htmlContent = outputText.innerHTML;
+    if (!htmlContent || htmlContent.includes('Your bionic reading text will appear here')) {
         alert('Please convert some text first!');
         return;
     }
@@ -195,21 +194,13 @@ pdfBtn.addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    // PDF settings for optimal reading
-    doc.setFont('times', 'normal');
-    doc.setFontSize(12);
-    
-    // Split text into lines that fit the page
     const pageWidth = doc.internal.pageSize.getWidth();
     const margins = 20;
     const maxWidth = pageWidth - (margins * 2);
-    
-    // Split content into lines
-    const lines = doc.splitTextToSize(content, maxWidth);
-    
-    let y = 20; // Starting Y position
-    const lineHeight = 7;
     const pageHeight = doc.internal.pageSize.getHeight();
+    const lineHeight = 7;
+    
+    let y = 20;
     
     // Add title
     doc.setFontSize(16);
@@ -217,18 +208,67 @@ pdfBtn.addEventListener('click', () => {
     doc.text('Batonic Reading', margins, y);
     y += 15;
     
-    // Reset to normal text
+    // Reset font
     doc.setFontSize(12);
-    doc.setFont('times', 'normal');
     
-    // Add lines to PDF with page breaks
-    lines.forEach((line) => {
-        if (y + lineHeight > pageHeight - margins) {
+    // Extract paragraphs
+    const paragraphs = outputText.querySelectorAll('p');
+    
+    paragraphs.forEach((paragraph) => {
+        if (paragraph.classList.contains('text-gray-400')) return; // Skip placeholder
+        
+        const words = paragraph.querySelectorAll('.bionic-word');
+        let currentLine = '';
+        let x = margins;
+        
+        words.forEach((wordSpan) => {
+            const boldPart = wordSpan.querySelector('.bionic-bold');
+            const word = wordSpan.textContent;
+            const boldText = boldPart ? boldPart.textContent : '';
+            const normalText = word.substring(boldText.length);
+            
+            // Check if adding this word exceeds line width
+            const testLine = currentLine + word + ' ';
+            const testWidth = doc.getTextWidth(testLine);
+            
+            if (testWidth > maxWidth && currentLine !== '') {
+                // Move to next line
+                y += lineHeight;
+                if (y > pageHeight - margins) {
+                    doc.addPage();
+                    y = margins;
+                }
+                x = margins;
+                currentLine = '';
+            }
+            
+            // Add bold part
+            if (boldText) {
+                doc.setFont('times', 'bold');
+                doc.text(boldText, x, y);
+                x += doc.getTextWidth(boldText);
+            }
+            
+            // Add normal part
+            if (normalText) {
+                doc.setFont('times', 'normal');
+                doc.text(normalText, x, y);
+                x += doc.getTextWidth(normalText);
+            }
+            
+            // Add space
+            doc.setFont('times', 'normal');
+            const spaceWidth = doc.getTextWidth(' ');
+            x += spaceWidth;
+            currentLine += word + ' ';
+        });
+        
+        // New line after paragraph
+        y += lineHeight * 1.5;
+        if (y > pageHeight - margins) {
             doc.addPage();
             y = margins;
         }
-        doc.text(line, margins, y);
-        y += lineHeight;
     });
     
     // Download the PDF
