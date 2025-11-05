@@ -4,11 +4,11 @@ const themeToggle = document.getElementById('theme-toggle');
 const sunIcon = document.getElementById('sun-icon');
 const moonIcon = document.getElementById('moon-icon');
 
-// Initialize theme (default dark mode)
-let isDark = true;
+// Initialize theme from localStorage or default to light mode
+let isDark = localStorage.getItem('theme') === 'dark';
 
-themeToggle.addEventListener('click', () => {
-    isDark = !isDark;
+// Apply theme on page load
+function applyTheme() {
     if (isDark) {
         html.classList.add('dark');
         sunIcon.classList.add('hidden');
@@ -18,6 +18,16 @@ themeToggle.addEventListener('click', () => {
         sunIcon.classList.remove('hidden');
         moonIcon.classList.add('hidden');
     }
+}
+
+// Apply theme immediately
+applyTheme();
+
+themeToggle.addEventListener('click', () => {
+    isDark = !isDark;
+    // Save theme preference to localStorage
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    applyTheme();
 });
 
 // Settings Panel Logic
