@@ -1,0 +1,43 @@
+/* Smooth theme transitions */
+* {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 400ms;
+}
+
+html {
+    transition: background-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    transition: background-color 400ms cubic-bezier(0.4, 0, 0.2, 1), color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bionic-word {
+    margin-right: 0.35rem;
+    display: inline-block;
+}
+
+.bionic-bold {
+    font-weight: 700;
+}
+
+/* Slide panel animation */
+.settings-panel {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-panel.hidden-panel {
+    transform: translateX(100%);
+}
+
+/* Toggle switch */
+.toggle-checkbox:checked {
+    right: 0;
+    border-color: #3b82f6;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #3b82f6;
+}
+

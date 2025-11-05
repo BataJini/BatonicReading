@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batonic Reading</title>
+    <link rel="icon" type="image/png" href="images/bat-favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+    
+    <!-- Header -->
+    <header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+        <div class="max-w-7xl mx-auto pl-2 pr-4 sm:pl-3 sm:pr-6 lg:pl-4 lg:pr-8 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <!-- Batonic Logo -->
+                <img src="images/BatonicLogo.png" alt="Batonic Reading Logo" class="h-16 dark:invert">
+                <div>
+                    <h1 class="text-xl text-gray-900 dark:text-gray-100">
+                        <span class="font-bold">Bat</span><span class="font-normal">onic</span> <span class="font-bold">Read</span><span class="font-normal">ing</span>
+                    </h1>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Read Faster, Understand Better</p>
+                </div>
+            </div>
+            
+            <!-- Theme Toggle & Settings -->
+            <div class="flex items-center space-x-4">
+                <!-- Dark/Light Mode Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                    <svg id="sun-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <svg id="moon-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+                
+                <!-- Settings Button -->
+                <button id="settings-btn" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-800 text-white rounded-lg hover:shadow-lg transition-all duration-200">
+                    Settings
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Input Pane -->
+            <div id="input-pane" class="bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-transparent rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Input Text</h2>
+                    <button id="convert-btn" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-800 text-white rounded-lg hover:shadow-lg">
+                        Convert
+                    </button>
+                </div>
+                <textarea 
+                    id="input-text" 
+                    placeholder="Paste your text here to convert to bionic reading format..."
+                    class="w-full h-96 p-4 bg-gray-50 dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent outline-none resize-none text-base leading-relaxed"
+                ></textarea>
+            </div>
+            
+            <!-- Output Pane -->
+            <div id="output-pane" class="bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-transparent rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Bionic Output</h2>
+                    <button id="copy-btn" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg hover:shadow-lg">
+                        Copy
+                    </button>
+                </div>
+                <div 
+                    id="output-text" 
+                    class="w-full h-96 p-4 bg-gray-50 dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 rounded-lg overflow-y-auto text-base leading-relaxed"
+                >
+                    <p class="text-gray-400 dark:text-gray-600 italic">Your bionic reading text will appear here...</p>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Settings Panel (Slide-out from right) -->
+    <div id="settings-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden transition-opacity duration-300"></div>
+    <div id="settings-panel" class="settings-panel hidden-panel fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-800 shadow-2xl z-50 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Settings</h2>
+            <button id="close-settings" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Bold Percentage Setting -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium mb-2">Bold Percentage</label>
+            <input 
+                type="range" 
+                id="bold-percentage" 
+                min="20" 
+                max="60" 
+                value="40" 
+                class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+            >
+            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2">
+                <span>20%</span>
+                <span id="percentage-value" class="font-semibold text-gray-900 dark:text-gray-100">40%</span>
+                <span>60%</span>
+            </div>
+        </div>
+        
+        <!-- Font Size Setting -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium mb-2">Font Size</label>
+            <select id="font-size" class="w-full p-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-gray-500">
+                <option value="text-sm">Small</option>
+                <option value="text-base" selected>Medium</option>
+                <option value="text-lg">Large</option>
+                <option value="text-xl">Extra Large</option>
+            </select>
+        </div>
+        
+        <!-- Line Height Setting -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium mb-2">Line Spacing</label>
+            <select id="line-height" class="w-full p-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-gray-500">
+                <option value="leading-normal">Normal</option>
+                <option value="leading-relaxed" selected>Relaxed</option>
+                <option value="leading-loose">Loose</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 w-full mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex-1"></div>
+                <p class="flex-1 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Made with <span class="text-red-500">♥</span> by <a href="https://github.com/batajini" target="_blank" class="font-semibold hover:underline">BataJini</a> © 2025
+                </p>
+                <div class="flex-1 flex justify-end">
+                    <a href="https://buymeacoffee.com/batajini" target="_blank" class="inline-flex items-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-600/60 dark:hover:bg-yellow-600/80 text-gray-900 font-semibold rounded-lg transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-.766-1.623a4.09 4.09 0 0 0-1.364-1.04 4.17 4.17 0 0 0-1.674-.32H7.104c-.577 0-1.151.1-1.674.32a4.09 4.09 0 0 0-1.364 1.04c-.378.46-.647 1.025-.766 1.623l-.132.666a2.97 2.97 0 0 0-.066.654v9.143c0 1.657 1.343 3 3 3h11.784c1.657 0 3-1.343 3-3V7.069a2.97 2.97 0 0 0-.066-.654zM8.104 18.93a1 1 0 1 1 0-2h7.784a1 1 0 1 1 0 2H8.104zm9.784-4.93H6.104a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h11.784a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1z"/>
+                        </svg>
+                        Buy Me a Coffee
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
