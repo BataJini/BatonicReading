@@ -198,7 +198,21 @@ pdfBtn.addEventListener('click', () => {
     const margins = 20;
     const maxWidth = pageWidth - (margins * 2);
     const pageHeight = doc.internal.pageSize.getHeight();
-    const lineHeight = 7;
+    
+    // Get font size from settings
+    const fontSize = fontSizeSelect.value;
+    let pdfFontSize = 12; // default
+    if (fontSize === 'text-sm') pdfFontSize = 10;
+    else if (fontSize === 'text-base') pdfFontSize = 12;
+    else if (fontSize === 'text-lg') pdfFontSize = 14;
+    else if (fontSize === 'text-xl') pdfFontSize = 16;
+    
+    // Get line height from settings
+    const lineHeightSetting = lineHeightSelect.value;
+    let lineHeight = 7;
+    if (lineHeightSetting === 'leading-normal') lineHeight = pdfFontSize * 0.5;
+    else if (lineHeightSetting === 'leading-relaxed') lineHeight = pdfFontSize * 0.6;
+    else if (lineHeightSetting === 'leading-loose') lineHeight = pdfFontSize * 0.7;
     
     let y = 20;
     
@@ -208,8 +222,8 @@ pdfBtn.addEventListener('click', () => {
     doc.text('Batonic Reading', margins, y);
     y += 15;
     
-    // Reset font
-    doc.setFontSize(12);
+    // Apply user's font size setting
+    doc.setFontSize(pdfFontSize);
     
     // Extract paragraphs
     const paragraphs = outputText.querySelectorAll('p');
