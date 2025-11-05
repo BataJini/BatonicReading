@@ -180,6 +180,67 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// PDF Download Logic
+const pdfBtn = document.getElementById('pdf-btn');
+
+pdfBtn.addEventListener('click', () => {
+    const content = outputText.innerText;
+    
+    // Check if there's actual content
+    if (!content || content.includes('Your bionic reading text will appear here')) {
+        alert('Please convert some text first!');
+        return;
+    }
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // PDF settings for optimal reading
+    doc.setFont('times', 'normal');
+    doc.setFontSize(12);
+    
+    // Split text into lines that fit the page
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margins = 20;
+    const maxWidth = pageWidth - (margins * 2);
+    
+    // Split content into lines
+    const lines = doc.splitTextToSize(content, maxWidth);
+    
+    let y = 20; // Starting Y position
+    const lineHeight = 7;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    // Add title
+    doc.setFontSize(16);
+    doc.setFont('times', 'bold');
+    doc.text('Batonic Reading', margins, y);
+    y += 15;
+    
+    // Reset to normal text
+    doc.setFontSize(12);
+    doc.setFont('times', 'normal');
+    
+    // Add lines to PDF with page breaks
+    lines.forEach((line) => {
+        if (y + lineHeight > pageHeight - margins) {
+            doc.addPage();
+            y = margins;
+        }
+        doc.text(line, margins, y);
+        y += lineHeight;
+    });
+    
+    // Download the PDF
+    doc.save('batonic-reading.pdf');
+    
+    // Visual feedback
+    pdfBtn.textContent = 'Downloaded!';
+    setTimeout(() => {
+        pdfBtn.textContent = 'PDF';
+    }, 2000);
+});
+
 // Auto-convert on Enter key (Ctrl/Cmd + Enter)
 inputText.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
