@@ -72,9 +72,14 @@
             <div id="output-pane" class="bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-transparent rounded-xl shadow-lg p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Bionic Output</h2>
-                    <button id="copy-btn" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg hover:shadow-lg">
-                        Copy
-                    </button>
+                    <div class="flex gap-2">
+                        <button id="read-mode-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg hover:shadow-lg transition-all duration-200">
+                            Read Mode
+                        </button>
+                        <button id="copy-btn" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg hover:shadow-lg transition-all duration-200">
+                            Copy
+                        </button>
+                    </div>
                 </div>
                 <div 
                     id="output-text" 
@@ -136,6 +141,38 @@
                 <option value="leading-relaxed" selected>Relaxed</option>
                 <option value="leading-loose">Loose</option>
             </select>
+        </div>
+    </div>
+
+    <!-- Read Mode Modal -->
+    <div id="read-mode-modal" class="fixed inset-0 bg-white z-50 hidden overflow-y-auto">
+        <div class="min-h-screen">
+            <!-- Header Bar -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 shadow-sm z-10">
+                <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Read Mode</h2>
+                    <button id="close-read-mode" class="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Reading Content -->
+            <div class="max-w-3xl mx-auto px-8 py-12">
+                <div id="read-mode-content" class="text-gray-900 text-lg leading-relaxed" style="
+                    font-family: 'Georgia', 'Cambria', 'Times New Roman', serif;
+                    font-size: 19px;
+                    line-height: 1.7;
+                    text-align: left;
+                    word-spacing: 0.05em;
+                    hyphens: auto;
+                    max-width: 70ch;
+                ">
+                    <p class="text-gray-400 italic">Your reading content will appear here...</p>
+                </div>
+            </div>
         </div>
     </div>
 

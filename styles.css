@@ -41,3 +41,29 @@ body {
     background-color: #3b82f6;
 }
 
+/* Read Mode Styles - Optimized for Reading */
+#read-mode-content {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#read-mode-content p {
+    margin-bottom: 1.5em;
+    text-indent: 0;
+}
+
+#read-mode-content .bionic-word {
+    margin-right: 0.35rem;
+}
+
+/* Smooth modal transitions */
+#read-mode-modal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#read-mode-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+

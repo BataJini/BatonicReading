@@ -139,6 +139,47 @@ copyBtn.addEventListener('click', () => {
     });
 });
 
+// Read Mode Logic
+const readModeBtn = document.getElementById('read-mode-btn');
+const readModeModal = document.getElementById('read-mode-modal');
+const closeReadMode = document.getElementById('close-read-mode');
+const readModeContent = document.getElementById('read-mode-content');
+
+function openReadMode() {
+    // Get the bionic content
+    const content = outputText.innerHTML;
+    
+    // Check if there's actual content
+    if (!content || content.includes('Your bionic reading text will appear here')) {
+        alert('Please convert some text first!');
+        return;
+    }
+    
+    // Copy content to read mode
+    readModeContent.innerHTML = content;
+    
+    // Show modal
+    readModeModal.classList.remove('hidden');
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeReadModeView() {
+    readModeModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+readModeBtn.addEventListener('click', openReadMode);
+closeReadMode.addEventListener('click', closeReadModeView);
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !readModeModal.classList.contains('hidden')) {
+        closeReadModeView();
+    }
+});
+
 // Auto-convert on Enter key (Ctrl/Cmd + Enter)
 inputText.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
